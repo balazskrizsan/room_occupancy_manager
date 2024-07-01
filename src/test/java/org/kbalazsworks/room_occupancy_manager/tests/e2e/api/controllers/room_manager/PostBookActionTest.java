@@ -24,6 +24,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class PostBookActionTest extends AbstractE2eTest
 {
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+
     @MockBean
     private BookService bookService;
 
@@ -58,7 +60,7 @@ public class PostBookActionTest extends AbstractE2eTest
             .perform(
                 MockMvcRequestBuilders
                     .post(testedUri)
-                    .content(new ObjectMapper().writeValueAsString(testedBody))
+                    .content(objectMapper.writeValueAsString(testedBody))
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON)
             );
@@ -106,7 +108,7 @@ public class PostBookActionTest extends AbstractE2eTest
             .perform(
                 MockMvcRequestBuilders
                     .post(testedUri)
-                    .content(new ObjectMapper().writeValueAsString(testedBody))
+                    .content(objectMapper.writeValueAsString(testedBody))
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON)
             );

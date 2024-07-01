@@ -24,10 +24,7 @@ public class Http403Forbidden4Test extends AbstractE2eTest
 
         // Act - Assert
         getMockMvc()
-            .perform(
-                MockMvcRequestBuilders
-                    .get(testedUrl)
-            )
+            .perform(MockMvcRequestBuilders.get(testedUrl))
             .andExpect(expectedStatus)
             .andExpect(content().string(expectedData));
     }
