@@ -16,7 +16,12 @@ public class HttpSecurityConfig
         http
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(r -> {
+                r.requestMatchers(HttpMethod.GET, "/api-docs").permitAll();
+                r.requestMatchers(HttpMethod.GET, "/api-docs.yaml").permitAll();
+                r.requestMatchers(HttpMethod.GET, "/api-docs/**").permitAll();
+
                 r.requestMatchers(HttpMethod.GET, "/health/200ok").permitAll();
+
                 r.requestMatchers(HttpMethod.POST, "/room-manager/book").permitAll();
                 r.anyRequest().authenticated();
             });
