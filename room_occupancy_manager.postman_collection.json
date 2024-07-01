@@ -1,0 +1,104 @@
+{
+	"info": {
+		"_postman_id": "72d8674b-b847-4ca9-8bfa-4d5d514f8c05",
+		"name": "room_occupancy_manager",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "890294"
+	},
+	"item": [
+		{
+			"name": "health/200Ok",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:8081/health/200ok",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"health",
+						"200ok"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "health/403Forbidden",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:8081/health/403Forbidden",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"health",
+						"403Forbidden"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "room_manager/book",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"availableEconomyRooms\": 10,\r\n    \"availablePremiumRooms\": 20,\r\n    \"customerPrices\": [1, 2, 3.3]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:8081/room-manager/book",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"room-manager",
+						"book"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api-docs",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:8081/api-docs.yaml",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api-docs.yaml"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
