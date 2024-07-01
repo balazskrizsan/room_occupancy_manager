@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.util.HashMap;
 import java.util.List;
 
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -72,5 +73,53 @@ public class PostBookActionTest extends AbstractE2eTest
         ;
 
         verify(bookService).book(expectedBookServiceCall);
+    }
+
+    @Test
+    @SneakyThrows
+    public void invalidValues_responseWithError()
+    {
+        // Arrange
+        String testedUri = "/room-manager/book";
+        HashMap<String, Object> testedBody = new HashMap<>()
+        {{
+            put("availableEconomyRooms", -1);
+            put("availablePremiumRooms", 3);
+            put("customerPrices", List.of(1, 2, 3.3));
+        }};
+
+        Book expectedBookServiceCall = new Book(-1, 3, List.of((double) 1, (double) 2, (double) 3.3));
+        String expectedErrorMessage = "Economy rooms must be positive number";
+        boolean expectedSuccess = false;
+        int expectedErrorCode = 1001;
+        int expectedRequestId = 1;
+
+        PostBookResponse mockedBookResponse = new PostBookResponse(
+            new BookDetails(1, 2.2),
+            new BookDetails(3, 4.4)
+        );
+
+        when(bookService.book(expectedBookServiceCall)).thenReturn(mockedBookResponse);
+
+        // Act
+        ResultActions result = getMockMvc()
+            .perform(
+                MockMvcRequestBuilders
+                    .post(testedUri)
+                    .content(new ObjectMapper().writeValueAsString(testedBody))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON)
+            );
+
+        // Assert
+        result
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.data").value(expectedErrorMessage))
+            .andExpect(jsonPath("$.success").value(expectedSuccess))
+            .andExpect(jsonPath("$.errorCode").value(expectedErrorCode))
+            .andExpect(jsonPath("$.requestId").value(expectedRequestId))
+        ;
+
+        verify(bookService, never()).book(expectedBookServiceCall);
     }
 }

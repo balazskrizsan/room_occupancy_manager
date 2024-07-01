@@ -1,6 +1,7 @@
 package org.kbalazsworks.room_occupancy_manager.api.controllers.room_manager;
 
 import lombok.RequiredArgsConstructor;
+import org.kbalazsworks.kbalazsworks_common.validators.JavaxValidatorService;
 import org.kbalazsworks.room_occupancy_manager.api.builders.ResponseEntityBuilder;
 import org.kbalazsworks.room_occupancy_manager.api.exceptions.ApiException;
 import org.kbalazsworks.room_occupancy_manager.api.requests.room_manager.PostBookRequest;
@@ -31,6 +32,8 @@ public class PostBookAction
     public ResponseEntity<ResponseData<PostBookResponse>> action(@RequestBody PostBookRequest request)
         throws ApiException
     {
+        new JavaxValidatorService<PostBookRequest>().validate(request);
+
         Book book = roomManagerRequestMapperService.mapToEntity(request);
 
         return new ResponseEntityBuilder<PostBookResponse>()
