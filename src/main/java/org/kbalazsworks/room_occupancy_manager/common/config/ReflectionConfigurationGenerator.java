@@ -37,6 +37,11 @@ public class ReflectionConfigurationGenerator
             .generate(
                 "src/main/java/org/kbalazsworks/room_occupancy_manager/common/config/ReflectionConfiguration.java",
                 List.of(
+                    "org.kbalazsworks.room_occupancy_manager.api.requests.room_manager",
+                    "org.kbalazsworks.room_occupancy_manager.api.responses.room_manager",
+                    "org.kbalazsworks.room_occupancy_manager.api.value_objects",
+                    "org.kbalazsworks.room_occupancy_manager.domain.entities",
+                    "org.kbalazsworks.room_occupancy_manager.domain.value_objects"
                 ),
                 List.of(
                     ResponseEntity.class
