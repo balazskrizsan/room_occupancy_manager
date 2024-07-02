@@ -1,0 +1,100 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: room-occupancy-manager--latest
+  name: room-occupancy-manager-backend-app
+  labels:
+    app: room-occupancy-manager-backend-app-label
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: room-occupancy-manager-backend-app
+  template:
+    metadata:
+      labels:
+        app: room-occupancy-manager-backend-app-label
+        service: room-occupancy-manager-backend-app
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: room-occupancy-manager-backend-app
+          image: kbalazsworks/room_occupancy_manager_native:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          resources:
+            requests:
+              cpu: 200m
+              memory: 200Mi
+            limits:
+              cpu: 400m
+              memory: 400Mi
+          env:
+            - name: spring.profiles.active
+              value: native
+            - name: NATIVE_REFLECTION_CONFIGURATION_GENERATOR_ENABLED
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secrets
+                  key: NATIVE_REFLECTION_CONFIGURATION_GENERATOR_ENABLED
+            - name: SERVER_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secrets
+                  key: SERVER_PORT
+            - name: SERVER_SSL_ENABLED
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secrets
+                  key: SERVER_SSL_ENABLED
+            - name: SERVER_SSL_KEY_STORE
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secrets
+                  key: SERVER_SSL_KEY_STORE
+            - name: SERVER_SSL_KEY_STORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secrets
+                  key: SERVER_SSL_KEY_STORE_PASSWORD
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: room-occupancy-manager--latest
+  name: room-occupancy-manager-backend-service
+  labels:
+    app: room-occupancy-manager-backend-app-label
+    service: room-occupancy-manager-backend-app-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: room-occupancy-manager-backend-app-label
+    service: room-occupancy-manager-backend-app
+  ports:
+    - name: "https"
+      protocol: TCP
+      port: 8085
+      targetPort: 8080
+#---
+#apiVersion: networking.k8s.io/v1
+#kind: Ingress
+#metadata:
+#  namespace: room-occupancy-manager--latest
+#  name: room-occupancy-manager-backend-app-ingress
+#spec:
+#  ingressClassName: nginx
+#  rules:
+#    - host: room-occupancy-manager.dev
+#      http:
+#        paths:
+#          - path: /be
+#            pathType: Prefix
+#            backend:
+#              service:
+#                name: room-occupancy-manager-backend-service
+#                port:
+#                  number: 8085
